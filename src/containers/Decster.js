@@ -1,11 +1,8 @@
 import React from 'react';
 import Grid from '../components/pokemon/Grid'
-import Search from '../components/pokemon/Search'
+import NavBar from '../components/pokemon/NavBar'
 import Info from '../components/pokemon/Info'
-
-import Pokedex from 'pokedex-promise-v2'
-
-const baseSpriteUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon';
+import pokeApiHelpers from '.././utils/PokeApiHelpers'
 
 class Decster extends React.Component {
   constructor(props) {
@@ -17,66 +14,57 @@ class Decster extends React.Component {
       pokemons: []
     }
 
-    this.onSearchChange = this.onSearchChange.bind(this)
+    this.handleSearchChange = this.handleSearchChange.bind(this)
     this.handlePokemonClick = this.handlePokemonClick.bind(this)
   }
 
   componentDidMount() {
-    const P = new Pokedex();
-    const options = {
-      limit: 150
-    }
-    P.getPokemonsList(options)
-      .then(function(response) {
-        //Add image to every pokemon
-        const pokemonsArray = response.results.map((pokemon, index) => {
-          pokemon.id = index + 1
-          pokemon.name = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)
-          pokemon.sprite = `${baseSpriteUrl}/${pokemon.id}.png`
-          return pokemon
-        });
-
+    pokeApiHelpers.getPokemonList()
+      .then(pokemons => {
         this.setState({
-          pokemons: pokemonsArray
+          pokemons: pokemons
         })
-
-      }.bind(this))
+      })
   }
 
-  onSearchChange(event) {
+  handleSearchChange(event) {
     this.setState({
       searchTerm: event.target.value
     })
   }
 
-  handlePokemonClick(pokemonIndex) {
-    if (this.state.pokemonSelected == pokemonIndex) {
+  handlePokemonClick(pokemonId, pokemonName) {
+    const {pokemonSelected} = this.state
+
+    if (pokemonSelected && pokemonSelected.id == pokemonId) {
       this.setState({
         pokemonSelected: null
       })
     } else {
       this.setState({
-        pokemonSelected: pokemonIndex
+        pokemonSelected: {
+          id: pokemonId,
+          name: pokemonName
+        }
       })
     }
   }
 
-  renderPokemonSelected() {
-    if(this.state.pokemonSelected != null) {
-      // Call pokemon API to render all the information
-      return <Info pokemon={this.state.pokemons[this.state.pokemonSelected - 1]} />
-    }
+  filteredPokemons() {
+    const pokemons = this.state.pokemons.filter((pokemon) => {
+      return pokemon.name.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) !== -1;
+    })
+    return pokemons
   }
 
   render() {
     return (
       <div>
-        <Search onChange={this.onSearchChange}/>
-        {this.renderPokemonSelected()}
+        <NavBar onSearchChange={this.handleSearchChange}/>
         <Grid
-          filter={this.state.searchTerm}
-          pokemonsArray={this.state.pokemons}
+          pokemonsArray={this.filteredPokemons()}
           onPokemonClick={this.handlePokemonClick}
+          pokemonSelected={this.state.pokemonSelected}
           />
       </div>
     );

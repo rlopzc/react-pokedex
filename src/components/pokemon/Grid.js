@@ -1,15 +1,10 @@
 import React from 'react';
 import Small from './Small'
+import Info from './Info'
 
 class Grid extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  getPokemons() {
-    const pokemons = this.props.pokemonsArray.filter((pokemon) => {
-      return pokemon.name.indexOf(this.props.filter) !== -1;
-    }).map((pokemon, index) => {
+  renderPokemons() {
+    const pokemons = this.props.pokemonsArray.map((pokemon, index) => {
         return (
           <Small
             name={pokemon.name}
@@ -23,17 +18,25 @@ class Grid extends React.Component {
     return pokemons;
   }
 
+  renderPokemonName() {
+    const {pokemonSelected} = this.props
+    return pokemonSelected ? pokemonSelected.name : ''
+  }
+
   render() {
     return (
       <section className="container">
-        <div className="col-xs-10">
-          <div class="page-header">
+        <div className="col-xs-9">
+          <div className="page-header">
             <h1>Pokedex <small>150 Pokemon</small></h1>
           </div>
-          {this.getPokemons()}
+          {this.renderPokemons()}
         </div>
-        <div className="col-xs-2">
-          Pokemon INFO!
+        <div className="col-xs-3">
+          <div className="page-header">
+            <h1>Info <small>{this.renderPokemonName()}</small></h1>
+          </div>
+          <Info pokemonSelected={this.props.pokemonSelected} />
         </div>
       </section>
     );

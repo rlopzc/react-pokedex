@@ -7,13 +7,13 @@ class Small extends React.Component {
   }
 
   _onClick() {
-    this.props.onPokemonClick(this.props.id)
+    this.props.onPokemonClick(this.props.id, this.props.name)
   }
 
   render() {
     const {imageSrc, name} = this.props;
     return (
-      <div className='col-xs-3 text-center' onClick={this._onClick}>
+      <div className='col-xs-4 text-center' onClick={this._onClick}>
         <img src={imageSrc} />
         <div>
           {name}
