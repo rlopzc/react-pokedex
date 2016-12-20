@@ -13,9 +13,9 @@ class Small extends React.Component {
   render() {
     const {imageSrc, name} = this.props;
     return (
-      <div className='pokemon-small' onClick={this._onClick}>
+      <div className='col-xs-3 text-center' onClick={this._onClick}>
         <img src={imageSrc} />
-        <div className="pokemon-name">
+        <div>
           {name}
         </div>
       </div>

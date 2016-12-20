@@ -1,7 +1,8 @@
 import React from 'react';
-import Grid from './pokemon/Grid'
-import Search from './pokemon/Search'
-import Info from './pokemon/Info'
+import Grid from '../components/pokemon/Grid'
+import Search from '../components/pokemon/Search'
+import Info from '../components/pokemon/Info'
+
 import Pokedex from 'pokedex-promise-v2'
 
 const baseSpriteUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon';
@@ -30,6 +31,7 @@ class Decster extends React.Component {
         //Add image to every pokemon
         const pokemonsArray = response.results.map((pokemon, index) => {
           pokemon.id = index + 1
+          pokemon.name = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)
           pokemon.sprite = `${baseSpriteUrl}/${pokemon.id}.png`
           return pokemon
         });
@@ -69,7 +71,6 @@ class Decster extends React.Component {
   render() {
     return (
       <div>
-        <h1>Decster</h1>
         <Search onChange={this.onSearchChange}/>
         {this.renderPokemonSelected()}
         <Grid

@@ -25,9 +25,16 @@ class Grid extends React.Component {
 
   render() {
     return (
-      <section className="grid">
-        Pokemons here!
-        {this.getPokemons()}
+      <section className="container">
+        <div className="col-xs-10">
+          <div class="page-header">
+            <h1>Pokedex <small>150 Pokemon</small></h1>
+          </div>
+          {this.getPokemons()}
+        </div>
+        <div className="col-xs-2">
+          Pokemon INFO!
+        </div>
       </section>
     );
   }
