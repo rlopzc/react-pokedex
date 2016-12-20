@@ -7,7 +7,7 @@ class Small extends React.Component {
   }
 
   _onClick() {
-    this.props.onPokemonClick(this.props.id, this.props.name)
+    this.props.onPokemonClick(this.props.name)
   }
 
   render() {

@@ -11,7 +11,9 @@ class Decster extends React.Component {
     this.state = {
       searchTerm: '',
       pokemonSelected: null,
-      pokemons: []
+      pokemons: [],
+      loadingPokemonSelected: false,
+      loadingPokemons: true
     }
 
     this.handleSearchChange = this.handleSearchChange.bind(this)
@@ -22,7 +24,8 @@ class Decster extends React.Component {
     pokeApiHelpers.getPokemonList()
       .then(pokemons => {
         this.setState({
-          pokemons: pokemons
+          pokemons: pokemons,
+          loadingPokemons: false
         })
       })
   }
@@ -33,20 +36,27 @@ class Decster extends React.Component {
     })
   }
 
-  handlePokemonClick(pokemonId, pokemonName) {
+  handlePokemonClick(pokemonName) {
     const {pokemonSelected} = this.state
 
-    if (pokemonSelected && pokemonSelected.id == pokemonId) {
+    if (pokemonSelected && pokemonSelected.name == pokemonName) {
       this.setState({
-        pokemonSelected: null
+        pokemonSelected: null,
+        loadingPokemonSelected: false
       })
     } else {
-      this.setState({
-        pokemonSelected: {
-          id: pokemonId,
-          name: pokemonName
-        }
-      })
+      this.setState({loadingPokemonSelected: true})
+
+      pokeApiHelpers.getPokemonInfo(pokemonName)
+        .then((result) => {
+          this.setState({
+            pokemonSelected: {
+              name: pokemonName,
+              info: result
+            },
+            loadingPokemonSelected: false
+          })
+        })
     }
   }
 
@@ -61,11 +71,15 @@ class Decster extends React.Component {
     return (
       <div>
         <NavBar onSearchChange={this.handleSearchChange}/>
-        <Grid
-          pokemonsArray={this.filteredPokemons()}
-          onPokemonClick={this.handlePokemonClick}
-          pokemonSelected={this.state.pokemonSelected}
-          />
+        <div className="container">
+          <Grid
+            pokemonsArray={this.filteredPokemons()}
+            onPokemonClick={this.handlePokemonClick}
+            loadingPokemons={this.state.loadingPokemons} />
+          <Info
+            pokemonSelected={this.state.pokemonSelected}
+            loadingPokemonSelected={this.state.loadingPokemonSelected} />
+        </div>
       </div>
     );
   }
