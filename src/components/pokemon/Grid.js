@@ -8,14 +8,22 @@ const baseSpriteUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/
 class Grid extends React.Component {
   componentDidMount() {
     this.props.fetchAllPokemons()
+    this.filteredPokemons = this.filteredPokemons.bind(this)
   }
 
+
+  filteredPokemons() {
+    const pokemonsArray = this.props.pokemonArray.filter((pokemon) => {
+      return pokemon.name.toLowerCase().indexOf(this.props.searchTerm.toLowerCase()) !== -1;
+    })
+    return pokemonsArray
+  }
 
   renderPokemons() {
     if (this.props.loadingPokemons) {
       return <Loading />
     } else {
-      const pokemons = this.props.pokemonArray.map((pokemon, index) => {
+      const pokemons = this.filteredPokemons().map((pokemon, index) => {
         return (
           <Small
             name={pokemon.name}

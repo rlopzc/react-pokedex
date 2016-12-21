@@ -60,12 +60,7 @@ class Decster extends React.Component {
     }
   }
 
-  filteredPokemons() {
-    const pokemonsArray = this.state.pokemonsArray.filter((pokemon) => {
-      return pokemon.name.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) !== -1;
-    })
-    return pokemonsArray
-  }
+  
 
   render() {
     return (
@@ -73,7 +68,8 @@ class Decster extends React.Component {
         <NavBar onSearchChange={this.handleSearchChange}/>
         <div className="container">
           <Grid
-            onPokemonClick={this.handlePokemonClick} />
+            onPokemonClick={this.handlePokemonClick}
+            searchTerm={this.state.searchTerm}/>
           <Info
             pokemonSelected={this.state.pokemonSelected}
             loadingPokemonSelected={this.state.loadingPokemonSelected} />
