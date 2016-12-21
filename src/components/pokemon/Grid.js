@@ -1,20 +1,28 @@
 import React from 'react';
 import Small from './Small'
 import Loading from '.././Loading'
+import {connect} from 'react-redux'
+import PokemonActions from '../../actions/pokemon'
+const baseSpriteUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon';
 
 class Grid extends React.Component {
+  componentDidMount() {
+    this.props.fetchAllPokemons()
+  }
+
+
   renderPokemons() {
     if (this.props.loadingPokemons) {
       return <Loading />
     } else {
-      const pokemons = this.props.pokemonsArray.map((pokemon, index) => {
-          return (
-            <Small
-              name={pokemon.name}
-              imageSrc={pokemon.sprite}
-              onPokemonClick={this.props.onPokemonClick}
-              key={index} />
-          )
+      const pokemons = this.props.pokemonArray.map((pokemon, index) => {
+        return (
+          <Small
+            name={pokemon.name}
+            imageSrc={pokemon.sprite}
+            onPokemonClick={this.props.onPokemonClick}
+            key={index} />
+        )
       })
       return pokemons
     }
@@ -30,7 +38,19 @@ class Grid extends React.Component {
       </div>
     );
   }
-
 }
 
-export default Grid;
+function mapStateToProps(state) {
+  return {
+    loadingPokemons: state.pokemon.loadingPokemons,
+    pokemonArray: state.pokemon.pokemonArray
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    fetchAllPokemons: () => dispatch(PokemonActions.fetchAll())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Grid);

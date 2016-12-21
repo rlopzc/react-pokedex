@@ -11,7 +11,7 @@ class Decster extends React.Component {
     this.state = {
       searchTerm: '',
       pokemonSelected: null,
-      pokemons: [],
+      pokemonsArray: [],
       loadingPokemonSelected: false,
       loadingPokemons: true
     }
@@ -22,9 +22,9 @@ class Decster extends React.Component {
 
   componentDidMount() {
     pokeApiHelpers.getPokemonList()
-      .then(pokemons => {
+      .then(pokemonsArray => {
         this.setState({
-          pokemons: pokemons,
+          pokemonsArray: pokemonsArray,
           loadingPokemons: false
         })
       })
@@ -61,10 +61,10 @@ class Decster extends React.Component {
   }
 
   filteredPokemons() {
-    const pokemons = this.state.pokemons.filter((pokemon) => {
+    const pokemonsArray = this.state.pokemonsArray.filter((pokemon) => {
       return pokemon.name.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) !== -1;
     })
-    return pokemons
+    return pokemonsArray
   }
 
   render() {
@@ -73,9 +73,7 @@ class Decster extends React.Component {
         <NavBar onSearchChange={this.handleSearchChange}/>
         <div className="container">
           <Grid
-            pokemonsArray={this.filteredPokemons()}
-            onPokemonClick={this.handlePokemonClick}
-            loadingPokemons={this.state.loadingPokemons} />
+            onPokemonClick={this.handlePokemonClick} />
           <Info
             pokemonSelected={this.state.pokemonSelected}
             loadingPokemonSelected={this.state.loadingPokemonSelected} />

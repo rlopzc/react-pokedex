@@ -1,8 +1,62 @@
+import axios from 'axios'
 import Pokedex from 'pokedex-promise-v2'
 
 const baseSpriteUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon';
 const Poke = new Pokedex()
 
+export default {
+  fetchAll: (limit = 150) => {
+    const options = {
+      limit: limit
+    }
+
+    return (dispatch) => {
+      dispatch({
+        type: 'REQUEST_POKEMON_ARRAY'
+      })
+
+      Poke.getPokemonsList(options)
+        .then((result) => {
+          const parsedResults = parsePokemonsArray(result);
+          dispatch({
+            type: 'POKEMON_ARRAY_FETCHED',
+            pokemonArray: parsedResults
+          })
+        }).catch((error) => {
+          dispatch({
+            type: 'POKEMON_ARRAY_FETCH_FAILED',
+            error: error
+          })
+        })
+    }
+  },
+  fetchPokemon: (pokemonName) => {
+    return (dispatch) => {
+      dispatch({
+        type: 'REQUEST_POKEMON'
+      })
+
+      Poke.getPokemonByName(pokemonName.toLowerCase())
+        .then((result) => {
+          const parsedResult = parsePokemonInfo(result);
+          dispatch({
+            type: 'POKEMON_FETCHED',
+            pokemonSelected: {
+              name: pokemonName,
+              info: pokemonSelected
+            }
+          })
+        }).catch((error) => {
+          dispatch({
+            type: 'POKEMON_FETCH_FAILED',
+            error: error
+          })
+        })
+    }
+  }
+}
+
+// Helpers
 function parsePokemonsArray(pokemons) {
   const pokemonsArray = pokemons.results.map((pokemon, index) => {
     pokemon.id = index + 1
@@ -46,25 +100,3 @@ function parsePokemonInfo(pokemon) {
   // Return parsed pokemon
   return pokemon
 }
-
-const helpers = {
-  getPokemonList(limit = 150) {
-    const options = {
-      limit: limit
-    }
-    return Poke.getPokemonsList(options)
-      .then(parsePokemonsArray)
-      .catch((error) => {
-        console.warn('Error in pokemon list', error)
-      })
-  },
-  getPokemonInfo(name) {
-    return Poke.getPokemonByName(name.toLowerCase())
-      .then(parsePokemonInfo)
-      .catch((error) => {
-        console.warn('Error in pokemon info: ', error);
-      });
-  }
-}
-
-export default helpers;

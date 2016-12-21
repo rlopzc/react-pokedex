@@ -16,7 +16,48 @@ class Info extends React.Component {
     if (this.props.loadingPokemonSelected) {
       return <Loading />
     } else if(this.props.pokemonSelected != null){
+      const {name, info} = this.props.pokemonSelected
       console.log(this.props.pokemonSelected)
+      return (
+        <div>
+          <li className='list-group-item'>Abilities: {info.abilities.join(', ')}</li>
+          <li className="list-group-item">Base Exp: {info.base_experience}</li>
+          <li className='list-group-item'>Height: {info.height} mts</li>
+          <li className="list-group-item">Weight: {info.weight} kgs</li>
+          <li className="list-group-item">Type: {info.types.join(', ')}.</li>
+          <li className="list-group-item">
+            Stats:
+            <ul className='list-group'>
+              {info.stats.map((stat, index) => {
+                return (
+                  <li key={index} className="list-group-item">
+                    {stat.name}: {stat.value}
+                  </li>
+                )
+              })}
+            </ul>
+          </li>
+          <li className="list-group-item">Moves:
+            <ul className="list-group">
+              <li className="list-group-item">
+                {info.moves.join(', ')}.
+              </li>
+            </ul>
+          </li>
+          <li className="list-group-item">
+            Sprites:
+            <ul className="list-group">
+              {info.sprites.map((sprite, index) => {
+                return (
+                  <li key={index} className="list-group-item">
+                    <img src={sprite} className="img-rounded img-responsive"/>
+                  </li>
+                )
+              })}
+            </ul>
+          </li>
+        </div>
+      )
     }
   }
 
