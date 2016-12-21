@@ -11,23 +11,11 @@ class Decster extends React.Component {
     this.state = {
       searchTerm: '',
       pokemonSelected: null,
-      pokemonsArray: [],
       loadingPokemonSelected: false,
-      loadingPokemons: true
     }
 
     this.handleSearchChange = this.handleSearchChange.bind(this)
     this.handlePokemonClick = this.handlePokemonClick.bind(this)
-  }
-
-  componentDidMount() {
-    pokeApiHelpers.getPokemonList()
-      .then(pokemonsArray => {
-        this.setState({
-          pokemonsArray: pokemonsArray,
-          loadingPokemons: false
-        })
-      })
   }
 
   handleSearchChange(event) {
@@ -59,8 +47,6 @@ class Decster extends React.Component {
         })
     }
   }
-
-  
 
   render() {
     return (
